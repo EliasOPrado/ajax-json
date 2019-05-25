@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>AJAX | JSON</title>
     <style type="text/css">
         body {
             font-family: sans-serif;
@@ -46,12 +46,44 @@
     <div class="ajax-container">
         <input type="button" id="btnAjaxCall" value="Ajax Call" />
         <div class="display-data">
-
+            <!--(data) displayed here -->
         </div>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script>
+    var count = 0;
+
+    $('#btnAjaxCall').click(function() {
+        fetchDataAndDisplay();
+    });
+
+    function fetchDataAndDisplay() {
+        $.ajax({
+            url: 'https://jsonplaceholder.typicode.com/posts',
+            method: "GET"
+        }).done(function(data) {
+            var start = count > 0 ? 5 * count : count;
+            var end = start + 5 ;
+            var str = "";
+            for (var i = start; i < end; i++) {
+                str += '<div class="item-details">' +
+                    'User Id is = ' + data[i].userId + '<br/>' +
+                    'Id is = ' + data[i].id + '<br/>' +
+                    'Title is = ' + data[i].title + '<br/>' +
+                    '</div>';
+            }
+            if(start == data.length - 5){
+                count = 0;
+                $('display-data').empty();
+                $('display-data').append('List Traversed. Start Over!');
+                return;
+            }
+            count++;
+            $('.display-data').empty(str);
+            $('.display-data').append(str);
+        });
+    }
 </script>
 
 </html>
